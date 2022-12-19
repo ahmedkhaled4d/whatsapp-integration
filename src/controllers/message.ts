@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
-import "dotenv/config";
+
 import facebookAxios from "../services/axios";
 
 function sendTemplate(

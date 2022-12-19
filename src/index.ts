@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import { Request, Response, Application } from "express";
+import "dotenv/config";
 import express = require("express");
 import { https } from "firebase-functions";
 import router from "./routes/message";
@@ -8,6 +9,7 @@ const config = {
   verifyToken: "WEBHOOK_VERIFIED",
   mode: "subscribe"
 };
+
 // app.use(); // protect all routes
 
 app.use(router);
