@@ -1,3 +1,4 @@
+import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import facebookAxios from "../services/axios";
@@ -59,7 +60,7 @@ exports.recieveWebhooks = async (
   next: NextFunction
 ) => {
   const body_param = req.body;
-
+  functions.logger.info("callback logs=body_param", JSON.stringify(body_param));
   if (body_param.object) {
     if (
       body_param.entry &&
@@ -73,14 +74,16 @@ exports.recieveWebhooks = async (
       const msg_body =
         body_param.entry[0].changes[0].value.messages[0].text.body;
 
-      console.log("phone number " + phon_no_id);
-      console.log("from " + from);
-      console.log("body param " + msg_body);
-
-      sendTemplate("hello_world", "201279187181", "en_US");
-      res.sendStatus(200);
-    } else {
-      res.sendStatus(404);
+      functions.logger.info(
+        "callback logs=phone number",
+        JSON.stringify(phon_no_id)
+      );
+      functions.logger.info("callback logs=from", JSON.stringify(from));
+      functions.logger.info(
+        "callback logs=body param",
+        JSON.stringify(msg_body)
+      );
+      return res.sendStatus(200);
     }
   }
 };
