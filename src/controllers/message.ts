@@ -2,9 +2,6 @@ import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import facebookAxios from "../services/axios";
-if (!process.env.TOKEN) {
-  throw new Error("Token doesnt exist!");
-}
 
 function sendTemplate(
   templateName: string,
