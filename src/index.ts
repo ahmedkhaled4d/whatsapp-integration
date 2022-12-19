@@ -20,12 +20,13 @@ app.post("/callback", (request: Request, response: Response) => {
       // Respond with the challenge token from the request
       console.dir(request.body, { depth: null });
       functions.logger.info("callback logs=", JSON.stringify(request.body));
-      response.status(200).send("log saved");
+      return response.status(200).send("log saved");
     } else {
       // Respond with '403 Forbidden' if verify tokens do not match
-      response.sendStatus(403);
+      return response.sendStatus(403);
     }
   }
+  return response.sendStatus(400);
 });
 
 export const whatsapp = https.onRequest(app);
