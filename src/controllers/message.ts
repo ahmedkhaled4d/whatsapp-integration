@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
-import { Icallback } from "../types/ICallback";
+import { IWebhook } from "../types/IWebhook";
 import { MessagesServices } from "../services/messages";
 import { Itemplate } from "../types/ITemplate";
+
+const verifyToken = process.env.VERIFY_TOKEN as string;
 
 exports.sendMessageToNumber = async (
   req: Request,
@@ -50,36 +52,33 @@ exports.recieveWebhooks = async (
   res: Response,
   next: NextFunction
 ) => {
-  const msg = new MessagesServices("201279187181");
   try {
-    const body_param: Icallback = req.body;
-    functions.logger.info(
-      "callback logs=body_param",
-      JSON.stringify(body_param)
-    );
-    if (body_param.object) {
+    const bodyParam: IWebhook = req.body;
+    functions.logger.info("callback logs=bodyParam", JSON.stringify(bodyParam));
+    if (bodyParam.object) {
       if (
-        body_param.entry &&
-        body_param.entry[0].changes &&
-        body_param.entry[0].changes[0].value.messages &&
-        body_param.entry[0].changes[0].value.messages[0]
+        bodyParam.entry &&
+        bodyParam.entry[0].changes &&
+        bodyParam.entry[0].changes[0].value.messages &&
+        bodyParam.entry[0].changes[0].value.messages[0]
       ) {
-        const phon_no_id =
-          body_param.entry[0].changes[0].value.metadata.phone_number_id;
-        const from = body_param.entry[0].changes[0].value.messages[0].from;
-        const msg_body =
-          body_param.entry[0].changes[0].value.messages[0].text.body;
+        const phonNoId =
+          bodyParam.entry[0].changes[0].value.metadata.phone_number_id;
+        const from = bodyParam.entry[0].changes[0].value.messages[0].from;
+        const msgBody =
+          bodyParam.entry[0].changes[0].value.messages[0].text.body;
 
         functions.logger.info(
           "callback logs=phone number",
-          JSON.stringify(phon_no_id)
+          JSON.stringify(phonNoId)
         );
         functions.logger.info("callback logs=from", JSON.stringify(from));
         functions.logger.info(
           "callback logs=body param",
-          JSON.stringify(msg_body)
+          JSON.stringify(msgBody)
         );
-        await msg.sendMessage(msg_body);
+        const messagesServices = new MessagesServices("201279187181");
+        await messagesServices.sendMessage(msgBody);
         return res.sendStatus(200);
       }
     }
@@ -91,10 +90,7 @@ exports.recieveWebhooks = async (
 
 exports.verifyWebhook = (request: Request, response: Response) => {
   // Parse the query params
-  const config = {
-    verifyToken: "WEBHOOK_VERIFIED",
-    mode: "subscribe"
-  };
+  const currentMode = "subscribe";
   const mode = request.query["hub.mode"];
   const token = request.query["hub.verify_token"];
   const challenge = request.query["hub.challenge"];
@@ -102,7 +98,7 @@ exports.verifyWebhook = (request: Request, response: Response) => {
   // Check if a token and mode is in the query string of the request
   if (mode && token) {
     // Check the mode and token sent is correct
-    if (mode === config.mode && token === config.verifyToken) {
+    if (mode === currentMode && token === verifyToken) {
       // Respond with the challenge token from the request
       console.dir(request.body, { depth: null });
       functions.logger.info("callback logs=", JSON.stringify(request.body));

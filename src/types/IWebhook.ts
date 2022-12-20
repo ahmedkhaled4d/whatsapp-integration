@@ -26,11 +26,11 @@ interface Ichange {
 interface Ientry {
   changes: [Ichange];
   id: string;
-  time: string;
-  uid: string;
+  time?: string;
+  uid?: string;
 }
 
-export interface Icallback {
+export interface IWebhook {
   object: string;
   entry: [Ientry];
 }
