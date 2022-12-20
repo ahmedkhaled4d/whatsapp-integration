@@ -6,5 +6,5 @@ const router = Router();
 router.post("/sendmessage", message.sendMessage);
 
 router.post("/webhooks", message.recieveWebhooks);
-
+router.get("/webhooks", message.verifyWebhook);
 export default router;

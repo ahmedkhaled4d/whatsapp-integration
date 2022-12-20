@@ -43,13 +43,19 @@ exports.sendMessage = async (
   res: Response,
   next: NextFunction
 ) => {
-  //sort of dialing phone code json
-  // const recipent = req.body.recipent;
-  // const messageEzz = req.body.message;
-  // const response = sendTemplate("hello_world", "201279187181", "en_US");
-  req.body.recipent;
-  req.body.message;
-  sendTemplate("hello_world", "201279187181", "en_US");
+  try {
+    //sort of dialing phone code json
+    // const recipent = req.body.recipent;
+    // const messageEzz = req.body.message;
+    // const response = sendTemplate("hello_world", "201279187181", "en_US");
+    req.body.recipent;
+    req.body.message;
+    const response = sendTemplate("hello_world", "201279187181", "en_US");
+    res.status(200).json({ message: response });
+  } catch (err) {
+    next(err);
+    res.status(500).json({ message: err });
+  }
 };
 
 exports.recieveWebhooks = async (
@@ -90,5 +96,32 @@ exports.recieveWebhooks = async (
     }
   } catch (e) {
     next(e);
+    return res.sendStatus(500);
   }
+};
+
+exports.verifyWebhook = (request: Request, response: Response) => {
+  // Parse the query params
+  const config = {
+    verifyToken: "WEBHOOK_VERIFIED",
+    mode: "subscribe"
+  };
+  const mode = request.query["hub.mode"];
+  const token = request.query["hub.verify_token"];
+  const challenge = request.query["hub.challenge"];
+
+  // Check if a token and mode is in the query string of the request
+  if (mode && token) {
+    // Check the mode and token sent is correct
+    if (mode === config.mode && token === config.verifyToken) {
+      // Respond with the challenge token from the request
+      console.dir(request.body, { depth: null });
+      functions.logger.info("callback logs=", JSON.stringify(request.body));
+      return response.status(200).send(challenge);
+    } else {
+      // Respond with '403 Forbidden' if verify tokens do not match
+      return response.sendStatus(403);
+    }
+  }
+  return response.sendStatus(400);
 };
