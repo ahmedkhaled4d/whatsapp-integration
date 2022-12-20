@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 const permToken = process.env.TOKEN as string;
-
+const phoneID = process.env.USA_PHONE_ID as string;
 const facebookAxios = axios.create({
-  baseURL: "https://graph.facebook.com/v15.0/102103062649066/messages",
+  baseURL: "https://graph.facebook.com/v15.0/" + phoneID + "/messages",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",

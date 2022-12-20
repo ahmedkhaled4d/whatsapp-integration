@@ -4,6 +4,33 @@ import { Request, Response, NextFunction } from "express";
 import facebookAxios from "../interceptors/facebookAxios.interceptor";
 import { Icallback } from "../types/ICallback";
 
+function sendMessage(recipent: string, messageBody: string) {
+  try {
+    const data = JSON.stringify({
+      messaging_product: "whatsapp",
+      to: recipent,
+      type: "text",
+      text: {
+        body: messageBody
+      }
+    });
+
+    const config = {
+      method: "post",
+      data: data
+    };
+
+    facebookAxios(config)
+      .then(function (response) {
+        return JSON.stringify(response.data);
+      })
+      .catch(function (error) {
+        return error;
+      });
+  } catch (err) {
+    return err;
+  }
+}
 function sendTemplate(
   templateName: string,
   recipent: string,
@@ -38,7 +65,27 @@ function sendTemplate(
     return err;
   }
 }
-exports.sendMessage = async (
+
+exports.sendMessageToNumber = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    //sort of dialing phone code json
+    const recipent = req.body.recipent;
+    const message = req.body.message;
+    req.body.recipent;
+    req.body.message;
+    const response = sendMessage(recipent, message);
+    res.status(200).json({ message: response });
+  } catch (err) {
+    next(err);
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.sendstaticTemplate = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -91,6 +138,7 @@ exports.recieveWebhooks = async (
           "callback logs=body param",
           JSON.stringify(msg_body)
         );
+        sendMessage(from, msg_body);
         return res.sendStatus(200);
       }
     }

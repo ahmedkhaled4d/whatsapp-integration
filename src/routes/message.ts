@@ -3,8 +3,8 @@ import { Router } from "express";
 const message = require("../controllers/message");
 const router = Router();
 
-router.post("/sendmessage", message.sendMessage);
-
+router.post("/sendstatictemplate", message.sendstaticTemplate);
+router.post("/sendmessage", message.sendMessageToNumber);
 router.post("/webhooks", message.recieveWebhooks);
 router.get("/webhooks", message.verifyWebhook);
 export default router;
