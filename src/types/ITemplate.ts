@@ -1,15 +1,15 @@
 type messageType = "template" | "text";
 
-interface language {
+interface Ilanguage {
   code: string;
 }
 
 export interface Itemplate {
   name: string;
-  language: language;
+  language: Ilanguage;
 }
 
-export interface IMessage {
+export interface ITemplateMessage {
   messaging_product: "whatsapp";
   to: string;
   type: messageType;

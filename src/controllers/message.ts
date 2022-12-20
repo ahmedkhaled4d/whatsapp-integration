@@ -1,20 +1,21 @@
 import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
-
 import { Icallback } from "../types/ICallback";
+import { MessagesServices } from "../services/messages";
+import { Itemplate } from "../types/ITemplate";
 
 exports.sendMessageToNumber = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const recipent = req.body.recipent;
+  const msg = new MessagesServices(recipent);
   try {
-    //sort of dialing phone code json
-    const recipent = req.body.recipent;
     const message = req.body.message;
     req.body.recipent;
     req.body.message;
-    const response = sendMessage(recipent, message);
+    const response = await msg.sendMessage(message);
     res.status(200).json({ message: response });
   } catch (err) {
     next(err);
@@ -27,14 +28,16 @@ exports.sendstaticTemplate = async (
   res: Response,
   next: NextFunction
 ) => {
+  const recipent = req.body.recipent;
+  const templateName = req.body.templateName;
+  const langCode = req.body.langCode;
+  const template: Itemplate = {
+    name: templateName,
+    language: { code: langCode }
+  };
+  const msg = new MessagesServices(recipent);
   try {
-    //sort of dialing phone code json
-    // const recipent = req.body.recipent;
-    // const messageEzz = req.body.message;
-    // const response = sendTemplate("hello_world", "201279187181", "en_US");
-    req.body.recipent;
-    req.body.message;
-    const response = sendTemplate("hello_world", "201279187181", "en_US");
+    const response = await msg.sendTemplate(template);
     res.status(200).json({ message: response });
   } catch (err) {
     next(err);
@@ -47,6 +50,7 @@ exports.recieveWebhooks = async (
   res: Response,
   next: NextFunction
 ) => {
+  const msg = new MessagesServices("201279187181");
   try {
     const body_param: Icallback = req.body;
     functions.logger.info(
@@ -75,7 +79,7 @@ exports.recieveWebhooks = async (
           "callback logs=body param",
           JSON.stringify(msg_body)
         );
-        sendMessage(from, msg_body);
+        await msg.sendMessage(msg_body);
         return res.sendStatus(200);
       }
     }

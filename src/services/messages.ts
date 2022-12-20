@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import facebookAxios from "../interceptors/facebookAxios.interceptor";
-import { IMessage, Itemplate } from "../types/ITemplete";
+import { ITemplateMessage, Itemplate } from "../types/ITemplate";
 
 interface IMessageService {
   recipent: string;
@@ -17,7 +17,7 @@ export class MessagesServices implements IMessageService {
   }
   async sendTemplate(template: Itemplate): Promise<AxiosResponse | AxiosError> {
     try {
-      const data: IMessage = {
+      const data: ITemplateMessage = {
         messaging_product: "whatsapp",
         to: this.recipent,
         type: "template",
@@ -33,14 +33,14 @@ export class MessagesServices implements IMessageService {
 
   async sendMessage(messageBody: string): Promise<AxiosResponse | AxiosError> {
     try {
-      const data = JSON.stringify({
+      const data = {
         messaging_product: "whatsapp",
         to: this.recipent,
         type: "text",
         text: {
           body: messageBody
         }
-      });
+      };
 
       const response = await facebookAxios.post("/messages", data);
       return response.data;
