@@ -1,10 +1,16 @@
 import { Router } from "express";
+import {
+  sendMessageToNumber,
+  sendstaticTemplate
+} from "../controllers/message";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const message = require("../controllers/message");
+
+const webhooks = require("../controllers/webhooks");
 const router = Router();
 
-router.post("/sendstatictemplate", message.sendstaticTemplate);
-router.post("/sendmessage", message.sendMessageToNumber);
-router.post("/webhooks", message.recieveWebhooks);
-router.get("/webhooks", message.verifyWebhook);
+router.post("/send/template", sendstaticTemplate);
+router.post("/send/message", sendMessageToNumber);
+
+router.post("/webhooks", webhooks.recieveWebhooks);
+router.get("/webhooks", webhooks.verifyWebhook);
 export default router;
