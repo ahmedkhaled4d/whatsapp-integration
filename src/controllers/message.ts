@@ -1,70 +1,7 @@
 import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
 
-import facebookAxios from "../interceptors/facebookAxios.interceptor";
 import { Icallback } from "../types/ICallback";
-
-function sendMessage(recipent: string, messageBody: string) {
-  try {
-    const data = JSON.stringify({
-      messaging_product: "whatsapp",
-      to: recipent,
-      type: "text",
-      text: {
-        body: messageBody
-      }
-    });
-
-    const config = {
-      method: "post",
-      data: data
-    };
-
-    facebookAxios(config)
-      .then(function (response) {
-        return JSON.stringify(response.data);
-      })
-      .catch(function (error) {
-        return error;
-      });
-  } catch (err) {
-    return err;
-  }
-}
-function sendTemplate(
-  templateName: string,
-  recipent: string,
-  lang_code: string
-) {
-  try {
-    const data = JSON.stringify({
-      messaging_product: "whatsapp",
-      to: recipent,
-      type: "template",
-      template: {
-        name: templateName,
-        language: {
-          code: lang_code
-        }
-      }
-    });
-
-    const config = {
-      method: "post",
-      data: data
-    };
-
-    facebookAxios(config)
-      .then(function (response) {
-        return JSON.stringify(response.data);
-      })
-      .catch(function (error) {
-        return error;
-      });
-  } catch (err) {
-    return err;
-  }
-}
 
 exports.sendMessageToNumber = async (
   req: Request,
