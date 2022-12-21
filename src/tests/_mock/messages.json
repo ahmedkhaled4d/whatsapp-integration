@@ -1,0 +1,32 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "105770972275979",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15550138518",
+              "phone_number_id": "102103062649066"
+            },
+            "contacts": [
+              { "profile": { "name": "Ezz Ashraf" }, "wa_id": "201279187181" }
+            ],
+            "messages": [
+              {
+                "from": "201279187181",
+                "id": "wamid.HBgMMjAxMjc5MTg3MTgxFQIAEhggMENFNjE4OEVGM0VDNTBGREUwNTY1MTNEQjBCQzRFMDcA",
+                "timestamp": "1671614703",
+                "text": { "body": "Ezz 2" },
+                "type": "text"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

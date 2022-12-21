@@ -13,12 +13,13 @@
             },
             "statuses": [
               {
-                "id": "wamid.HBgMMjAxMjc5MTg3MTgxFQIAERgSRDkyNjg1MjA2RENCM0UzRjY0AA==",
-                "status": "delivered",
-                "timestamp": "1671544803",
+                "id": "wamid.HBgMMjAxMjc5MTg3MTgxFQIAERgSQ0VBOUE5NUE3QkNFRjMwNThEAA==",
+                "status": "sent",
+                "timestamp": "1671545164",
                 "recipient_id": "201279187181",
                 "conversation": {
                   "id": "45a81f2f3bf5229c59030399b86ddc43",
+                  "expiration_timestamp": "1671629220",
                   "origin": { "type": "user_initiated" }
                 },
                 "pricing": {
