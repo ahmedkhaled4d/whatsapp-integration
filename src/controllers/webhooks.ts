@@ -1,28 +1,25 @@
 import * as functions from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
-import { IWebhook } from "../types/IWebhook";
+//import { Imessage } from "../types/Imessage";
 import HttpException from "../exceptions/HttpException";
-
-// import { MessagesServices } from "../services/messages";
-// import { phoneNumbers } from "../tests/_mock/phones";
+//import { phoneNumbers } from "../tests/_mock/phones";
+import { MessagesServices } from "../services/messages";
 
 const verifyToken = process.env.VERIFY_TOKEN as string;
 
-exports.recieveWebhooks = async (
+const recieveWebhooks = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const bodyParam: IWebhook = req.body;
-    functions.logger.info("Webhooks logs=bodyParam", JSON.stringify(bodyParam));
+    const bodyParam = req.body;
     if (bodyParam.object) {
-      if (
-        bodyParam.entry &&
-        bodyParam.entry[0].changes &&
-        bodyParam.entry[0].changes[0].value.messages &&
-        bodyParam.entry[0].changes[0].value.messages[0]
-      ) {
+      if (bodyParam?.entry[0]?.changes[0]?.value?.messages[0]) {
+        functions.logger.info(
+          "Webhooks logs=bodyParam",
+          JSON.stringify(bodyParam)
+        );
         const phonNoId =
           bodyParam.entry[0].changes[0].value.metadata.phone_number_id;
         const from = bodyParam.entry[0].changes[0].value.messages[0].from;
@@ -38,9 +35,11 @@ exports.recieveWebhooks = async (
           "callback logs=body param",
           JSON.stringify(msgBody)
         );
-        // const messagesServices = new MessagesServices(phoneNumbers.ezz);
-        // await messagesServices.sendMessage(msgBody);
+        const messagesServices = new MessagesServices(from);
+        await messagesServices.sendMessage(msgBody);
         return res.sendStatus(200);
+      } else {
+        return res.sendStatus(400);
       }
     }
   } catch (e) {
@@ -48,7 +47,7 @@ exports.recieveWebhooks = async (
   }
 };
 
-exports.verifyWebhook = (request: Request, response: Response) => {
+const verifyWebhook = (request: Request, response: Response) => {
   // Parse the query params
   const currentMode = "subscribe";
   const mode = request.query["hub.mode"];
@@ -71,3 +70,5 @@ exports.verifyWebhook = (request: Request, response: Response) => {
     throw new HttpException(400, "Bad Request");
   }
 };
+
+export { recieveWebhooks, verifyWebhook };

@@ -15,7 +15,7 @@ export class MessagesServices implements IMessageService {
   constructor(recipent: string) {
     this.recipent = recipent;
   }
-  async sendTemplate(template: Itemplate): Promise<AxiosResponse | AxiosError> {
+  async sendTemplate(template: Itemplate) {
     try {
       const data: ITemplateMessage = {
         messaging_product: "whatsapp",
@@ -26,12 +26,12 @@ export class MessagesServices implements IMessageService {
 
       const response = await facebookAxios.post("/messages", data);
       return response.data;
-    } catch (err: any) {
-      throw Error(err);
+    } catch (err) {
+      return err;
     }
   }
 
-  async sendMessage(messageBody: string): Promise<AxiosResponse | AxiosError> {
+  async sendMessage(messageBody: string) {
     try {
       const data = {
         messaging_product: "whatsapp",
@@ -44,8 +44,8 @@ export class MessagesServices implements IMessageService {
 
       const response = await facebookAxios.post("/messages", data);
       return response.data;
-    } catch (err: any) {
-      throw Error(err);
+    } catch (err) {
+      return err;
     }
   }
 }

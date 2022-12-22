@@ -3,14 +3,14 @@ import {
   sendMessageToNumber,
   sendstaticTemplate
 } from "../controllers/message";
+import { recieveWebhooks, verifyWebhook } from "../controllers/webhooks";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
-const webhooks = require("../controllers/webhooks");
 const router = Router();
 
 router.post("/send/template", sendstaticTemplate);
 router.post("/send/message", sendMessageToNumber);
 
-router.post("/webhooks", webhooks.recieveWebhooks);
-router.get("/webhooks", webhooks.verifyWebhook);
+router.post("/webhooks", recieveWebhooks);
+router.get("/webhooks", verifyWebhook);
 export default router;
