@@ -19,6 +19,7 @@ export class MessagesServices implements IMessageService {
     try {
       const data: ITemplateMessage = {
         messaging_product: "whatsapp",
+        recipient_type: "individual",
         to: this.recipent,
         type: "template",
         template: template
@@ -30,6 +31,23 @@ export class MessagesServices implements IMessageService {
       return err;
     }
   }
+
+  // async sendTemplateOneVar(template: Itemplate, variable: string) {
+  //   try {
+  //     const data: ITemplateMessage = {
+  //       messaging_product: "whatsapp",
+  //       recipient_type: "individual",
+  //       to: this.recipent,
+  //       type: "template",
+  //       template: template
+  //     };
+
+  //     const response = await facebookAxios.post("/messages", data);
+  //     return response.data;
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // }
 
   async sendMessage(messageBody: string) {
     try {

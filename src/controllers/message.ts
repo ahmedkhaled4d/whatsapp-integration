@@ -27,9 +27,28 @@ const sendstaticTemplate = async (
 ) => {
   const recipent = req.body.recipent as string;
   const templateName = req.body.templateName as keyof typeof savedTemplates;
-  const template: Itemplate = savedTemplates[templateName];
-  console.log("template Name => " + templateName);
-  console.log("template Body => " + template);
+  const template: Itemplate = savedTemplates[templateName] as Itemplate;
+  const msg = new MessagesServices(recipent);
+  try {
+    await msg.sendTemplate(template);
+    return res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+};
+const sendTemplateOneVar = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const recipent = req.body.recipent as string;
+  const gotVar = req.body.varName as string;
+  const templateName = req.body.templateName as keyof typeof savedTemplates;
+  const template: Itemplate = savedTemplates[templateName] as Itemplate;
+  if (template.components) {
+    if (template.components[0].parameters[0].type === "text")
+      template.components[0].parameters[0].text = gotVar;
+  }
   const msg = new MessagesServices(recipent);
   try {
     await msg.sendTemplate(template);
@@ -39,4 +58,39 @@ const sendstaticTemplate = async (
   }
 };
 
-export { sendMessageToNumber, sendstaticTemplate };
+const sendTemplateOneVarImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const recipent = req.body.recipent as string;
+  const gotVar = req.body.varName as string;
+  const imgLink = req.body.imgLink as string;
+  const templateName = req.body.templateName as keyof typeof savedTemplates;
+  const template: Itemplate = savedTemplates[templateName] as Itemplate;
+  if (template.components) {
+    if (template.components[0].parameters[0].type === "image") {
+      template.components[0].parameters[0].image.link = imgLink;
+    }
+    if (template.components[1]) {
+      if (template.components[1].parameters[0].type === "text") {
+        template.components[1].parameters[0].text = gotVar;
+      }
+    }
+  }
+
+  const msg = new MessagesServices(recipent);
+  try {
+    await msg.sendTemplate(template);
+    return res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export {
+  sendMessageToNumber,
+  sendstaticTemplate,
+  sendTemplateOneVar,
+  sendTemplateOneVarImage
+};

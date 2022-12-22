@@ -22,5 +22,50 @@ export const savedTemplates = {
     language: {
       code: "ar"
     }
+  },
+  certificate_generated: {
+    name: "certificate_generated",
+    language: {
+      code: "ar"
+    },
+    components: [
+      {
+        type: "body",
+        parameters: [
+          {
+            type: "text",
+            text: "string"
+          }
+        ]
+      }
+    ]
+  },
+  start_of_season: {
+    name: "start_of_season",
+    language: {
+      code: "ar"
+    },
+    components: [
+      {
+        type: "header",
+        parameters: [
+          {
+            type: "image",
+            image: {
+              link: "http(s)://the-url"
+            }
+          }
+        ]
+      },
+      {
+        type: "body",
+        parameters: [
+          {
+            type: "text",
+            text: "string"
+          }
+        ]
+      }
+    ]
   }
 };
