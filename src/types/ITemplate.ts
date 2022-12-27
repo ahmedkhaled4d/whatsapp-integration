@@ -37,6 +37,14 @@ interface Iimage {
   };
 }
 
+interface Idocument {
+  type: "document";
+  document: {
+    link: string;
+    filename: string;
+  };
+}
+
 interface Ipayload {
   type: "payload";
   payload: "PAYLOAD";
@@ -51,7 +59,7 @@ interface Ibutton {
 
 interface Icomponents {
   type: string;
-  parameters: [Itext | Icurrency | Idate | Iimage | Ibutton];
+  parameters: [Itext | Icurrency | Idocument | Idate | Iimage | Ibutton];
 }
 export interface Itemplate {
   name: string;

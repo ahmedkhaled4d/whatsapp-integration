@@ -36,7 +36,22 @@ const recieveWebhooks = async (
           JSON.stringify(msgBody)
         );
         const messagesServices = new MessagesServices(from);
-        await messagesServices.sendMessage(msgBody);
+        // await messagesServices.sendMessage(msgBody);
+
+        switch (msgBody) {
+          case "1":
+            await messagesServices.sendMessage("Choose Language");
+            break;
+          case "2":
+            await messagesServices.sendMessage("Choose Project");
+            break;
+          case "3":
+            await messagesServices.sendMessage("Choose Service");
+            break;
+          default:
+            break;
+        }
+
         return res.sendStatus(200);
       } else {
         return res.sendStatus(400);

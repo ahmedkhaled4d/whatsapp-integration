@@ -72,6 +72,9 @@ const sendTemplateOneVarImage = async (
     if (template.components[0].parameters[0].type === "image") {
       template.components[0].parameters[0].image.link = imgLink;
     }
+    if (template.components[0].parameters[0].type === "document") {
+      template.components[0].parameters[0].document.link = imgLink;
+    }
     if (template.components[1]) {
       if (template.components[1].parameters[0].type === "text") {
         template.components[1].parameters[0].text = gotVar;

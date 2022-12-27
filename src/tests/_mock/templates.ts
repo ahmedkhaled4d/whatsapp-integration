@@ -40,6 +40,25 @@ export const savedTemplates = {
       }
     ]
   },
+  image_test_template: {
+    name: "image_test_template",
+    language: {
+      code: "ar"
+    },
+    components: [
+      {
+        type: "header",
+        parameters: [
+          {
+            type: "image",
+            image: {
+              link: "http(s)://the-url"
+            }
+          }
+        ]
+      }
+    ]
+  },
   start_of_season: {
     name: "start_of_season",
     language: {
@@ -63,6 +82,26 @@ export const savedTemplates = {
           {
             type: "text",
             text: "string"
+          }
+        ]
+      }
+    ]
+  },
+  takweed_requirements: {
+    name: "takweed_requirements",
+    language: {
+      code: "ar"
+    },
+    components: [
+      {
+        type: "header",
+        parameters: [
+          {
+            type: "document",
+            document: {
+              link: "http(s)://the-url",
+              filename: "takweed requirements"
+            }
           }
         ]
       }
