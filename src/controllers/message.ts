@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { MessagesServices } from "../services/messages";
 import { Itemplate } from "../types/ITemplate";
 import { savedTemplates } from "../tests/_mock/templates";
+import AWS from "aws-sdk";
+import { AWSConfig } from "../config";
 const sendMessageToNumber = async (
   req: Request,
   res: Response,
@@ -91,9 +93,40 @@ const sendTemplateOneVarImage = async (
   }
 };
 
+const getAllMessages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  AWS.config.update(AWSConfig.aws_remote_config);
+
+  const docClient = new AWS.DynamoDB.DocumentClient();
+
+  const params = {
+    TableName: AWSConfig.aws_table_name
+  };
+
+  docClient.scan(params, function (err, data) {
+    if (err) {
+      console.log(err);
+      res.send({
+        success: false,
+        message: err
+      });
+    } else {
+      const { Items } = data;
+      res.send({
+        success: true,
+        movies: Items
+      });
+    }
+  });
+};
+
 export {
   sendMessageToNumber,
   sendstaticTemplate,
   sendTemplateOneVar,
-  sendTemplateOneVarImage
+  sendTemplateOneVarImage,
+  getAllMessages
 };

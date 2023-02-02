@@ -4,9 +4,10 @@ import { Request, Response, NextFunction } from "express";
 import HttpException from "../exceptions/HttpException";
 //import { phoneNumbers } from "../tests/_mock/phones";
 import { MessagesServices } from "../services/messages";
-
+import AWS from "aws-sdk";
+import { AWSConfig } from "../config";
 const verifyToken = process.env.VERIFY_TOKEN as string;
-
+import { v4 as uuidv4 } from "uuid";
 const recieveWebhooks = async (
   req: Request,
   res: Response,
@@ -23,6 +24,8 @@ const recieveWebhooks = async (
         const phonNoId =
           bodyParam.entry[0].changes[0].value.metadata.phone_number_id;
         const from = bodyParam.entry[0].changes[0].value.messages[0].from;
+        const timestamp =
+          bodyParam.entry[0].changes[0].value.messages[0].timestamp;
         const msgBody =
           bodyParam.entry[0].changes[0].value.messages[0].text.body;
 
@@ -35,6 +38,28 @@ const recieveWebhooks = async (
           "callback logs=body param",
           JSON.stringify(msgBody)
         );
+        AWS.config.update(AWSConfig.aws_remote_config);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        const msg_id = uuidv4();
+        const params = {
+          TableName: AWSConfig.aws_table_name,
+          Item: {
+            message_id: msg_id,
+            timestamp: parseInt(timestamp),
+            reply_template: "Hello World",
+            sender: from,
+            content: msgBody
+          }
+        };
+
+        // Call DynamoDB to add the item to the table
+        docClient.put(params, function (err, data) {
+          if (err) {
+            functions.logger.info("Error happened");
+          } else {
+            functions.logger.info("Conversation added to db");
+          }
+        });
         const messagesServices = new MessagesServices(from);
         // await messagesServices.sendMessage(msgBody);
 
@@ -49,6 +74,7 @@ const recieveWebhooks = async (
             await messagesServices.sendMessage("Choose Service");
             break;
           default:
+            await messagesServices.sendMessage("Send 1 or 2 or 3 please");
             break;
         }
 
