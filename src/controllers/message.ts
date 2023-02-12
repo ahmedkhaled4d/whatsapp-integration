@@ -123,10 +123,42 @@ const getAllMessages = async (
   });
 };
 
+const getDistinctConversation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  AWS.config.update(AWSConfig.aws_remote_config);
+
+  const docClient = new AWS.DynamoDB.DocumentClient();
+
+  const params = {
+    TableName: AWSConfig.aws_table_name,
+    ProjectionExpression: "sender"
+  };
+
+  docClient.scan(params, function (err, data) {
+    if (err) {
+      console.log(err);
+      res.send({
+        success: false,
+        message: err
+      });
+    } else {
+      const { Items } = data;
+      res.send({
+        success: true,
+        movies: Items
+      });
+    }
+  });
+};
+
 export {
   sendMessageToNumber,
   sendstaticTemplate,
   sendTemplateOneVar,
   sendTemplateOneVarImage,
-  getAllMessages
+  getAllMessages,
+  getDistinctConversation
 };

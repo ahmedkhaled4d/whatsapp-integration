@@ -4,7 +4,8 @@ import {
   sendstaticTemplate,
   sendTemplateOneVar,
   sendTemplateOneVarImage,
-  getAllMessages
+  getAllMessages,
+  getDistinctConversation
 } from "../controllers/message";
 import { recieveWebhooks, verifyWebhook } from "../controllers/webhooks";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -17,6 +18,7 @@ router.post("/send/templateonevarimg", sendTemplateOneVarImage);
 router.post("/send/message", sendMessageToNumber);
 
 router.get("/messages", getAllMessages);
+router.get("/conversations", getDistinctConversation);
 
 router.post("/webhooks", recieveWebhooks);
 router.get("/webhooks", verifyWebhook);
